@@ -1,10 +1,15 @@
 default:
 	@echo "Make the ctl docker image"
 
+hello:
+	@echo "Build and relese version $(VERSION)"
+
+all: hello build release
+
 build:
-	@docker build -t bryandollery/ctl:latest .
+	@docker build -t "bryandollery/ctl:$(VERSION)" .
 
 release:
-	@docker push bryandollery/ctl:latest 
-
+	@echo "Releasing version $(VERSION)"
+	@docker push "bryandollery/ctl:$(VERSION)"
 
