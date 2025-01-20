@@ -1,13 +1,59 @@
 #!/bin/bash
 
+##############################################################################
+#
+# Provides logging functions, and ansi colour functions for the terminal
+#
+# The LOG_LEVEL environment variable is respected by this script. Logs are 
+# done like this:
+#
+#   log "Info: This is an info message"
+#
+# or
+#
+#   log "Error: This is an error message"
+#
+# The log level itself will be coloured apprpriately. Other colours may be used
+# in the terminal output too.
+#
+# Colours are equally simple. For example:
+#
+#   echo -e "This isn't red, $(red but this is), while this is $(blue blue)"
+#
+# or
+#
+#   log "Error: Folder $(orange "$path"), not found"
+#
+# This will be printed in standard log format with a full timestamp, the word, 
+# "Error" in red, and the missing path in orange.
+#
+# After the colour function mame ('red', 'blue', 'green', etc) you may use quotes, 
+# or not, as you prefer, but symbols can be a bit tricky so only leave off the quotes
+# for very simple strings
+#
+##############################################################################
+
+
+
+#########################################
+#
+# Directives
+#
+#########################################
+
+
 # shellcheck disable=SC2155
 
-# if [[ -z COLORS ]]; then
+#########################################
+#
+# Colours
+#
+#########################################
 
 declare -A colors
 
-end="\e[0m"
-m="m"
+declare end="\e[0m"
+declare m="m"
 
 clr () {
   # shellcheck disable=SC2028
@@ -35,9 +81,6 @@ colorfy () {
   done <<< "$input"
   echo "$output"
 }
-
-end="\e[0m"
-m="m"
 
 colors[pink]=$(clr 255 150 150)
 
@@ -166,23 +209,25 @@ export -f black
 export -f white
 
 export -f grey
-export -f grey20
-export -f grey40
-export -f grey60
-export -f grey80
 export -f gray
+export -f grey20
 export -f gray20
+export -f grey40
 export -f gray40
+export -f grey60
 export -f gray60
+export -f grey80
 export -f gray80
 
 export -f watchmen
 
-export -f clr
-export -f encolor
+#########################################
+#
+# Logging Functions
+#
+#########################################
 
-export COLORS=true
-
+## Add the timestamp and colours and then logs the message to the terminal
 function _log {
   local output="${1//robot/$(watchmen Robot)}"
   output="${output//Error/$(red Error)}"
@@ -214,14 +259,23 @@ function warn {
 function error {
   local level="$1"
   local msg="$2" 
+
   if [[ "$level" == "Error" ]]; then
     _log "$msg"
   fi
 }
 
 log() {
+  [[ -z "$LOG_LEVEL" ]] && LOG_LEVEL="DEBUG" # Default to debugging on
+
   local level="${1%%: *}"
   local msg="$1"
+
+  # If $msg doesn't start with a log level, default to `Debug` by prepending it
+  if [[ "$level" != "Debug" && "$level" != "Info" && "$level" != "Warn" && "$level" != "Error" ]]; then
+    level="Debug"
+    msg="Debug: $msg"
+  fi
 
   if [[ "$LOG_LEVEL" == "INFO" ]]; then 
     info "$level" "$msg"
