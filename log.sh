@@ -183,18 +183,60 @@ export -f encolor
 
 export COLORS=true
 
-log() {
-  local output="${*//robot/$(watchmen Robot)}"
+function _log {
+  local output="${1//robot/$(watchmen Robot)}"
   output="${output//Error/$(red Error)}"
-  output="${output//Warning/$(yellow Warning)}"
+  output="${output//Warn/$(yellow Warn)}"
   output="${output//Info/$(blue Info)}"
   output="${output//Debug/$(orange Debug)}"
   ts=$(date -u +"$(gray "%Y-%m-%d")$(gray40 T)$(darkcyan %H)$(gray40 "-")$(cyan %M:%S)$(gray40 Z)")
   echo -e "$(gray40 "[")$ts$(gray40 "]") $output"
+} 
+
+function info {
+  local level="$1"
+  local msg="$2" 
+ 
+  if [[ "$level" != "Debug" ]]; then
+    _log "$msg"
+  fi
+}
+
+function warn {
+  local level="$1"
+  local msg="$2"
+
+  if [[ "$level" != "Debug" && "$level" != "Info" ]]; then
+    _log "$msg"
+  fi
+}
+
+function error {
+  local level="$1"
+  local msg="$2" 
+  if [[ "$level" == "Error" ]]; then
+    _log "$msg"
+  fi
+}
+
+log() {
+  local level="${1%%: *}"
+  local msg="$1"
+
+  if [[ "$LOG_LEVEL" == "INFO" ]]; then 
+    info "$level" "$msg"
+  elif [[ "$LOG_LEVEL" == "WARN" ]]; then 
+    warn "$level" "$msg"
+  elif [[ "$LOG_LEVEL" == "ERROR" ]]; then 
+    error "$level" "$msg"
+  else
+    _log "$msg"
+  fi
 }
 
 print() {
   robot="${*//robot/$(watchmen Robot)}"
+  
   echo -e "$robot"
 }
 
