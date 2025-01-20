@@ -187,6 +187,7 @@ log() {
   local output="${*//robot/$(watchmen Robot)}"
   output="${output//Error/$(red Error)}"
   output="${output//Warning/$(yellow Warning)}"
+  output="${output//Info/$(blue Info)}"
   output="${output//Debug/$(orange Debug)}"
   ts=$(date -u +"$(gray "%Y-%m-%d")$(gray40 T)$(darkcyan %H)$(gray40 "-")$(cyan %M:%S)$(gray40 Z)")
   echo -e "$(gray40 "[")$ts$(gray40 "]") $output"
