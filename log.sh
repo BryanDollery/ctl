@@ -240,5 +240,5 @@ print() {
   echo -e "$robot"
 }
 
-export log
-export print
+export -f log
+export -f print
