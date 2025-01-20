@@ -18,5 +18,5 @@ test:
 	@docker run -it --rm  bryandollery/ctl
 
 save:
-	@git add .
-	@git commit -m "Release version $(VERSION).\n$(commit "$(git show HEAD)")"
+	git commit -am "Release version $(VERSION). $(commit "$(git show HEAD)")"
+	git push
