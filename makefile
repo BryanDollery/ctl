@@ -4,7 +4,7 @@ default:
 hello:
 	@echo "Build and relese version $(VERSION)"
 
-all: hello build release save
+all: hello build release
 
 build:
 	@docker build -t "bryandollery/ctl:$(VERSION)" .
