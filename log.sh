@@ -227,13 +227,15 @@ export -f watchmen
 #
 #########################################
 
+declare c31="\033[31G"
+
 ## Add the timestamp and colours and then logs the message to the terminal
 function _log {
   local output="${1//robot/$(watchmen Robot)}"
-  output="${output//Error/$(red Error)}"
-  output="${output//Warn/$(yellow Warn)}"
-  output="${output//Info/$(blue Info)}"
-  output="${output//Debug/$(orange Debug)}"
+  output="${output//Error: /$(red "Error:$c31")}"
+  output="${output//Warn: /$(yellow "Warn:$c31")}"
+  output="${output//Info: /$(blue "Info:$c31")}"
+  output="${output//Debug: /$(orange "Debug:$c31")}"
   ts=$(date -u +"$(gray "%Y-%m-%d")$(gray40 T)$(darkcyan %H)$(gray40 "-")$(cyan %M:%S)$(gray40 Z)")
   echo -e "$(gray40 "[")$ts$(gray40 "]") $output"
 } 
