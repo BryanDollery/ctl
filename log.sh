@@ -271,8 +271,10 @@ log() {
   local level="${1%% *}" # First word of the message
   local msg="$1"
 
-  declare levels="debuginfowarnerror"
-  if [[ ! "$levels" =~ $level ]]; then
+  local levelLowercase=$(echo "$level" | tr '[:upper:]' '[:lower:]')
+  local levels="debuginfowarnerror"
+
+  if [[ ! "$levels" =~ $levelLowercase ]]; then
     level="Debug"
     msg="debug $msg"
   fi
@@ -290,6 +292,7 @@ log() {
 
 print() {
   robot="${*//robot/$(watchmen Robot)}"
+  
   echo -e "$robot"
 }
 
