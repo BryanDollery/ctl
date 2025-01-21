@@ -227,15 +227,13 @@ export -f watchmen
 #
 #########################################
 
-declare c31="\033[31G"
-
 ## Add the timestamp and colours and then logs the message to the terminal
 function _log {
   local output="${1//robot/$(watchmen Robot)}"
-  output="${output//Error: /$(red "Error:$c31")}"
-  output="${output//Warn: /$(yellow "Warn:$c31")}"
-  output="${output//Info: /$(blue "Info:$c31")}"
-  output="${output//Debug: /$(orange "Debug:$c31")}"
+  output="${output//[Ee]rror /$(red "ERROR ")}"
+  output="${output//[Ww]arn /$(yellow "WARN  ")}"
+  output="${output//[Ii]nfo /$(blue "INFO  ")}"
+  output="${output//[Dd]ebug /$(orange "DEBUG ")}"
   ts=$(date -u +"$(gray "%Y-%m-%d")$(gray40 T)$(darkcyan %H)$(gray40 "-")$(cyan %M:%S)$(gray40 Z)")
   echo -e "$(gray40 "[")$ts$(gray40 "]") $output"
 } 
@@ -270,13 +268,13 @@ function error {
 log() {
   [[ -z "$LOG_LEVEL" ]] && LOG_LEVEL="DEBUG" # Default to debugging on
 
-  local level="${1%%: *}"
+  local level="${1%% *}" # First word of the message
   local msg="$1"
 
-  # If $msg doesn't start with a log level, default to `Debug` by prepending it
-  if [[ "$level" != "Debug" && "$level" != "Info" && "$level" != "Warn" && "$level" != "Error" ]]; then
+  declare levels="debuginfowarnerror"
+  if [[ ! "$levels" =~ $level ]]; then
     level="Debug"
-    msg="Debug: $msg"
+    msg="debug $msg"
   fi
 
   if [[ "$LOG_LEVEL" == "INFO" ]]; then 
@@ -292,7 +290,6 @@ log() {
 
 print() {
   robot="${*//robot/$(watchmen Robot)}"
-  
   echo -e "$robot"
 }
 
