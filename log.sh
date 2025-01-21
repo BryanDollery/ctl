@@ -268,8 +268,16 @@ function error {
 log() {
   [[ -z "$LOG_LEVEL" ]] && LOG_LEVEL="DEBUG" # Default to debugging on
 
-  local level="${1%% *}" # First word of the message
   local msg="$1"
+  local level="${1%% *}" # First word of the message
+  
+  # if $level ends with a colon, remove it
+  if [[ "$level" =~ : ]]; then
+    level="${level%:}"      # Remove trailing colon
+    msg="$level ${msg#* }"         # Remove first word and add the level back in
+    
+  fi
+
 
   local levelLowercase=$(echo "$level" | tr '[:upper:]' '[:lower:]')
   local levels="debuginfowarnerror"
