@@ -11,6 +11,7 @@ build:
 	@docker tag "bryandollery/ctl:$(VERSION)" bryandollery/ctl:latest
 	@rm -f version &> /dev/null
 	@echo "$(VERSION)" > version
+	@git add version 
 
 release:
 	@echo "Releasing version $(VERSION)"
