@@ -268,7 +268,7 @@ function error {
 log() {
   [[ -z "$LOG_LEVEL" ]] && LOG_LEVEL="DEBUG" # Default to debugging on
 
-  local msg="$1"
+  local msg="$*"
   local level="${1%% *}" # First word of the message
   
   # if $level ends with a colon, remove it
