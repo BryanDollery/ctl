@@ -9,7 +9,8 @@ all: hello build release
 build:
 	@docker build -t "bryandollery/ctl:$(VERSION)" .
 	@docker tag "bryandollery/ctl:$(VERSION)" bryandollery/ctl:latest
-	@rm -f version; echo "$(VERSION)" > version
+	@rm -f version &> /dev/null
+	@echo "$(VERSION)" > version
 
 release:
 	@echo "Releasing version $(VERSION)"
