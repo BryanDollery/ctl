@@ -7,11 +7,11 @@
 # The LOG_LEVEL environment variable is respected by this script. Logs are 
 # done like this:
 #
-#   log "Info: This is an info message"
+#   log "infoThis is an info message"
 #
 # or
 #
-#   log "Error: This is an error message"
+#   log "errorThis is an error message"
 #
 # The log level itself will be coloured apprpriately. Other colours may be used
 # in the terminal output too.
@@ -22,7 +22,7 @@
 #
 # or
 #
-#   log "Error: Folder $(orange "$path"), not found"
+#   log "errorFolder $(orange "$path"), not found"
 #
 # This will be printed in standard log format with a full timestamp, the word, 
 # "Error" in red, and the missing path in orange.
@@ -271,14 +271,6 @@ log() {
   local msg="$*"
   local level="${1%% *}" # First word of the message
   
-  # if $level ends with a colon, remove it
-  if [[ "$level" =~ : ]]; then
-    level="${level%:}"      # Remove trailing colon
-    msg="$level ${msg#* }"         # Remove first word and add the level back in
-    
-  fi
-
-
   local levelLowercase=$(echo "$level" | tr '[:upper:]' '[:lower:]')
   local levels="debuginfowarnerror"
 
